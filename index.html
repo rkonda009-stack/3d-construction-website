@@ -1,442 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>ARVORA — Architecture & Interiors</title>
+<title>ARCO Construction & Interiors</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    body {
-      overflow: hidden;
-      background: #080808;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+body {
+    font-family: Arial, sans-serif;
+    background: #080808;
+    color: white;
+    overflow-x: hidden;
+}
 
-    #canvas-container {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-    }
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.75);
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
 
-    .content {
-      position: relative;
-      z-index: 2;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 35px 7%;
-      pointer-events: none;
-    }
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
 
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 25px;
+}
 
-    .logo {
-      font-size: 24px;
-      letter-spacing: 5px;
-      font-weight: bold;
-    }
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 8% 50px;
+    background:
+        radial-gradient(circle at 70% 40%, #5b4630 0%, transparent 30%),
+        linear-gradient(135deg,#080808,#19130d);
+}
 
-    .nav-links {
-      display: flex;
-      gap: 30px;
-      font-size: 13px;
-      letter-spacing: 2px;
-    }
+.hero-text {
+    width: 50%;
+    z-index: 2;
+}
 
+.hero h1 {
+    font-size: clamp(45px,7vw,90px);
+    line-height: 0.95;
+    margin-bottom: 25px;
+}
+
+.hero h1 span {
+    color: #d89b52;
+}
+
+.hero p {
+    color: #bbb;
+    font-size: 18px;
+    max-width: 550px;
+    line-height: 1.7;
+}
+
+.button {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 15px 28px;
+    background: #d89b52;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.building {
+    width: 360px;
+    height: 360px;
+    margin-left: auto;
+    perspective: 800px;
+}
+
+.cube {
+    width: 220px;
+    height: 220px;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotate 12s infinite linear;
+    margin: 70px auto;
+}
+
+.face {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: linear-gradient(135deg,#c48a4a,#33251a);
+    border: 2px solid #e2b778;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.front  { transform: translateZ(110px); }
+.back   { transform: rotateY(180deg) translateZ(110px); }
+.right  { transform: rotateY(90deg) translateZ(110px); }
+.left   { transform: rotateY(-90deg) translateZ(110px); }
+.top    { transform: rotateX(90deg) translateZ(110px); }
+.bottom { transform: rotateX(-90deg) translateZ(110px); }
+
+@keyframes rotate {
+    from { transform: rotateX(-15deg) rotateY(0deg); }
+    to { transform: rotateX(-15deg) rotateY(360deg); }
+}
+
+section {
+    padding: 100px 8%;
+}
+
+.title {
+    font-size: 45px;
+    margin-bottom: 50px;
+}
+
+.title span {
+    color: #d89b52;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 25px;
+}
+
+.card {
+    padding: 35px;
+    min-height: 230px;
+    background: #151515;
+    border: 1px solid #333;
+    transition: 0.4s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    border-color: #d89b52;
+}
+
+.card h3 {
+    margin-bottom: 20px;
+    color: #d89b52;
+    font-size: 25px;
+}
+
+.card p {
+    color: #aaa;
+    line-height: 1.6;
+}
+
+.about {
+    background: #101010;
+}
+
+footer {
+    text-align: center;
+    padding: 40px;
+    background: #050505;
+    color: #777;
+}
+
+@media(max-width:800px) {
     .hero {
-      max-width: 700px;
+        flex-direction: column;
+        text-align: center;
     }
 
-    .small {
-      font-size: 12px;
-      letter-spacing: 4px;
-      margin-bottom: 20px;
-      opacity: 0.7;
+    .hero-text {
+        width: 100%;
     }
 
-    h1 {
-      font-size: clamp(55px, 9vw, 125px);
-      line-height: 0.9;
-      letter-spacing: -5px;
-      margin-bottom: 30px;
+    .building {
+        margin: 50px auto 0;
+        transform: scale(.8);
     }
 
-    h1 span {
-      color: #b7a27a;
+    .cards {
+        grid-template-columns: 1fr;
     }
 
-    .description {
-      max-width: 450px;
-      line-height: 1.7;
-      font-size: 15px;
-      opacity: 0.75;
-    }
-
-    .button {
-      display: inline-block;
-      margin-top: 30px;
-      padding: 15px 28px;
-      border: 1px solid rgba(255,255,255,0.5);
-      color: white;
-      text-decoration: none;
-      font-size: 12px;
-      letter-spacing: 3px;
-      pointer-events: auto;
-    }
-
-    .button:hover {
-      background: white;
-      color: black;
-    }
-
-    .bottom {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      letter-spacing: 2px;
-      opacity: 0.6;
-    }
-
-    @media(max-width:700px) {
-      .nav-links {
+    nav a {
         display: none;
-      }
-
-      .content {
-        padding: 25px;
-      }
-
-      h1 {
-        font-size: 65px;
-      }
     }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
-  <div id="canvas-container"></div>
+<nav>
+    <div class="logo">ARCO</div>
 
-  <div class="content">
+    <div>
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+    </div>
+</nav>
 
-    <nav>
-      <div class="logo">ARVORA</div>
+<section class="hero" id="home">
 
-      <div class="nav-links">
-        <span>PROJECTS</span>
-        <span>INTERIORS</span>
-        <span>CONTACT</span>
-      </div>
-    </nav>
+    <div class="hero-text">
 
-    <section class="hero">
+        <h1>
+            BUILD<br>
+            <span>YOUR</span><br>
+            VISION.
+        </h1>
 
-      <div class="small">
-        ARCHITECTURE • INTERIORS • CONSTRUCTION
-      </div>
+        <p>
+            Premium construction and interior design solutions
+            created for modern living and working spaces.
+        </p>
 
-      <h1>
-        BUILD<br>
-        <span>BEAUTIFUL.</span>
-      </h1>
+        <a class="button" href="#services">
+            Explore Services
+        </a>
 
-      <p class="description">
-        We create timeless architectural spaces where
-        structure, design and modern living come together.
-      </p>
-
-      <a href="#" class="button">
-        EXPLORE PROJECTS
-      </a>
-
-    </section>
-
-    <div class="bottom">
-      <span>EST. 2026</span>
-      <span>SCROLL TO EXPLORE ↓</span>
     </div>
 
-  </div>
+    <div class="building">
 
+        <div class="cube">
 
-  <script type="module">
+            <div class="face front">ARCO</div>
+            <div class="face back">BUILD</div>
+            <div class="face right">DESIGN</div>
+            <div class="face left">CREATE</div>
+            <div class="face top">3D</div>
+            <div class="face bottom">2026</div>
 
-    import * as THREE from
-    "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+        </div>
 
+    </div>
 
-    // SCENE
+</section>
 
-    const scene = new THREE.Scene();
+<section id="services">
 
-    scene.background = new THREE.Color(0x080808);
+    <h2 class="title">
+        Our <span>Services</span>
+    </h2>
 
+    <div class="cards">
 
-    // CAMERA
+        <div class="card">
+            <h3>🏗 Construction</h3>
+            <p>
+                Complete residential and commercial
+                construction solutions with modern planning.
+            </p>
+        </div>
 
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      100
-    );
+        <div class="card">
+            <h3>🏠 Interiors</h3>
+            <p>
+                Elegant interior spaces designed around
+                your lifestyle, comfort and personality.
+            </p>
+        </div>
 
-    camera.position.set(6, 4, 9);
+        <div class="card">
+            <h3>📐 Architecture</h3>
+            <p>
+                Modern architectural concepts combining
+                functionality, creativity and technology.
+            </p>
+        </div>
 
+    </div>
 
-    // RENDERER
+</section>
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true
-    });
+<section class="about" id="about">
 
-    renderer.setSize(
-      window.innerWidth,
-      window.innerHeight
-    );
+    <h2 class="title">
+        Designed for <span>Tomorrow.</span>
+    </h2>
 
-    renderer.setPixelRatio(
-      Math.min(window.devicePixelRatio, 2)
-    );
+    <p style="max-width:700px;color:#aaa;font-size:19px;line-height:1.8;">
+        We create spaces that combine architecture,
+        construction and interior design into one complete
+        experience. From concept to completion, your vision
+        becomes reality.
+    </p>
 
-    document
-      .getElementById("canvas-container")
-      .appendChild(renderer.domElement);
+</section>
 
-
-    // LIGHTS
-
-    const ambientLight =
-      new THREE.AmbientLight(0xffffff, 1.5);
-
-    scene.add(ambientLight);
-
-
-    const light =
-      new THREE.DirectionalLight(0xffffff, 4);
-
-    light.position.set(5, 8, 5);
-
-    scene.add(light);
-
-
-    // MATERIAL
-
-    const buildingMaterial =
-      new THREE.MeshStandardMaterial({
-        color: 0xb7a27a,
-        metalness: 0.25,
-        roughness: 0.35
-      });
-
-
-    // BUILDING GROUP
-
-    const building = new THREE.Group();
-
-
-    // Main building
-
-    const mainGeometry =
-      new THREE.BoxGeometry(4, 3, 3);
-
-    const mainBuilding =
-      new THREE.Mesh(
-        mainGeometry,
-        buildingMaterial
-      );
-
-    mainBuilding.position.y = 1.5;
-
-    building.add(mainBuilding);
-
-
-    // Second floor
-
-    const secondGeometry =
-      new THREE.BoxGeometry(3.2, 1.2, 2.5);
-
-    const secondFloor =
-      new THREE.Mesh(
-        secondGeometry,
-        buildingMaterial
-      );
-
-    secondFloor.position.set(
-      0.5,
-      3.6,
-      0
-    );
-
-    building.add(secondFloor);
-
-
-    // Roof
-
-    const roofGeometry =
-      new THREE.BoxGeometry(4.6, 0.25, 3.5);
-
-    const roof =
-      new THREE.Mesh(
-        roofGeometry,
-        buildingMaterial
-      );
-
-    roof.position.y = 4.3;
-
-    building.add(roof);
-
-
-    // Entrance
-
-    const entranceMaterial =
-      new THREE.MeshStandardMaterial({
-        color: 0x111111,
-        metalness: 0.1,
-        roughness: 0.2
-      });
-
-    const entranceGeometry =
-      new THREE.BoxGeometry(1, 1.8, 0.15);
-
-    const entrance =
-      new THREE.Mesh(
-        entranceGeometry,
-        entranceMaterial
-      );
-
-    entrance.position.set(
-      0,
-      0.9,
-      1.53
-    );
-
-    building.add(entrance);
-
-
-    // Windows
-
-    const windowMaterial =
-      new THREE.MeshStandardMaterial({
-        color: 0x222222,
-        metalness: 0.8,
-        roughness: 0.15
-      });
-
-
-    function createWindow(x, y, z) {
-
-      const geometry =
-        new THREE.BoxGeometry(
-          0.7,
-          0.8,
-          0.12
-        );
-
-      const window =
-        new THREE.Mesh(
-          geometry,
-          windowMaterial
-        );
-
-      window.position.set(
-        x,
-        y,
-        z
-      );
-
-      building.add(window);
-    }
-
-
-    createWindow(-1.2, 1.8, 1.56);
-    createWindow(1.2, 1.8, 1.56);
-    createWindow(-1.2, 3.4, 1.3);
-    createWindow(1.2, 3.4, 1.3);
-
-
-    // Add building
-
-    scene.add(building);
-
-
-    // Floor
-
-    const floorGeometry =
-      new THREE.PlaneGeometry(
-        40,
-        40
-      );
-
-    const floorMaterial =
-      new THREE.MeshStandardMaterial({
-        color: 0x151515,
-        roughness: 0.8
-      });
-
-    const floor =
-      new THREE.Mesh(
-        floorGeometry,
-        floorMaterial
-      );
-
-    floor.rotation.x =
-      -Math.PI / 2;
-
-    scene.add(floor);
-
-
-    // Animation
-
-    function animate() {
-
-      requestAnimationFrame(animate);
-
-      building.rotation.y += 0.002;
-
-      renderer.render(
-        scene,
-        camera
-      );
-    }
-
-    animate();
-
-
-    // Resize
-
-    window.addEventListener(
-      "resize",
-      () => {
-
-        camera.aspect =
-          window.innerWidth /
-          window.innerHeight;
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(
-          window.innerWidth,
-          window.innerHeight
-        );
-
-      }
-    );
-
-  </script>
+<footer>
+    © 2026 ARCO Construction & Interiors
+</footer>
 
 </body>
 </html>
