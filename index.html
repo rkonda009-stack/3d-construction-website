@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ARVORA — Architecture & Interiors</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow: hidden;
+      background: #080808;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    #canvas-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 35px 7%;
+      pointer-events: none;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      letter-spacing: 5px;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      font-size: 13px;
+      letter-spacing: 2px;
+    }
+
+    .hero {
+      max-width: 700px;
+    }
+
+    .small {
+      font-size: 12px;
+      letter-spacing: 4px;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    h1 {
+      font-size: clamp(55px, 9vw, 125px);
+      line-height: 0.9;
+      letter-spacing: -5px;
+      margin-bottom: 30px;
+    }
+
+    h1 span {
+      color: #b7a27a;
+    }
+
+    .description {
+      max-width: 450px;
+      line-height: 1.7;
+      font-size: 15px;
+      opacity: 0.75;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 15px 28px;
+      border: 1px solid rgba(255,255,255,0.5);
+      color: white;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 3px;
+      pointer-events: auto;
+    }
+
+    .button:hover {
+      background: white;
+      color: black;
+    }
+
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      letter-spacing: 2px;
+      opacity: 0.6;
+    }
+
+    @media(max-width:700px) {
+      .nav-links {
+        display: none;
+      }
+
+      .content {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 65px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="canvas-container"></div>
+
+  <div class="content">
+
+    <nav>
+      <div class="logo">ARVORA</div>
+
+      <div class="nav-links">
+        <span>PROJECTS</span>
+        <span>INTERIORS</span>
+        <span>CONTACT</span>
+      </div>
+    </nav>
+
+    <section class="hero">
+
+      <div class="small">
+        ARCHITECTURE • INTERIORS • CONSTRUCTION
+      </div>
+
+      <h1>
+        BUILD<br>
+        <span>BEAUTIFUL.</span>
+      </h1>
+
+      <p class="description">
+        We create timeless architectural spaces where
+        structure, design and modern living come together.
+      </p>
+
+      <a href="#" class="button">
+        EXPLORE PROJECTS
+      </a>
+
+    </section>
+
+    <div class="bottom">
+      <span>EST. 2026</span>
+      <span>SCROLL TO EXPLORE ↓</span>
+    </div>
+
+  </div>
+
+
+  <script type="module">
+
+    import * as THREE from
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
+
+    // SCENE
+
+    const scene = new THREE.Scene();
+
+    scene.background = new THREE.Color(0x080808);
+
+
+    // CAMERA
+
+    const camera = new THREE.PerspectiveCamera(
+      45,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      100
+    );
+
+    camera.position.set(6, 4, 9);
+
+
+    // RENDERER
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, 2)
+    );
+
+    document
+      .getElementById("canvas-container")
+      .appendChild(renderer.domElement);
+
+
+    // LIGHTS
+
+    const ambientLight =
+      new THREE.AmbientLight(0xffffff, 1.5);
+
+    scene.add(ambientLight);
+
+
+    const light =
+      new THREE.DirectionalLight(0xffffff, 4);
+
+    light.position.set(5, 8, 5);
+
+    scene.add(light);
+
+
+    // MATERIAL
+
+    const buildingMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0xb7a27a,
+        metalness: 0.25,
+        roughness: 0.35
+      });
+
+
+    // BUILDING GROUP
+
+    const building = new THREE.Group();
+
+
+    // Main building
+
+    const mainGeometry =
+      new THREE.BoxGeometry(4, 3, 3);
+
+    const mainBuilding =
+      new THREE.Mesh(
+        mainGeometry,
+        buildingMaterial
+      );
+
+    mainBuilding.position.y = 1.5;
+
+    building.add(mainBuilding);
+
+
+    // Second floor
+
+    const secondGeometry =
+      new THREE.BoxGeometry(3.2, 1.2, 2.5);
+
+    const secondFloor =
+      new THREE.Mesh(
+        secondGeometry,
+        buildingMaterial
+      );
+
+    secondFloor.position.set(
+      0.5,
+      3.6,
+      0
+    );
+
+    building.add(secondFloor);
+
+
+    // Roof
+
+    const roofGeometry =
+      new THREE.BoxGeometry(4.6, 0.25, 3.5);
+
+    const roof =
+      new THREE.Mesh(
+        roofGeometry,
+        buildingMaterial
+      );
+
+    roof.position.y = 4.3;
+
+    building.add(roof);
+
+
+    // Entrance
+
+    const entranceMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x111111,
+        metalness: 0.1,
+        roughness: 0.2
+      });
+
+    const entranceGeometry =
+      new THREE.BoxGeometry(1, 1.8, 0.15);
+
+    const entrance =
+      new THREE.Mesh(
+        entranceGeometry,
+        entranceMaterial
+      );
+
+    entrance.position.set(
+      0,
+      0.9,
+      1.53
+    );
+
+    building.add(entrance);
+
+
+    // Windows
+
+    const windowMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x222222,
+        metalness: 0.8,
+        roughness: 0.15
+      });
+
+
+    function createWindow(x, y, z) {
+
+      const geometry =
+        new THREE.BoxGeometry(
+          0.7,
+          0.8,
+          0.12
+        );
+
+      const window =
+        new THREE.Mesh(
+          geometry,
+          windowMaterial
+        );
+
+      window.position.set(
+        x,
+        y,
+        z
+      );
+
+      building.add(window);
+    }
+
+
+    createWindow(-1.2, 1.8, 1.56);
+    createWindow(1.2, 1.8, 1.56);
+    createWindow(-1.2, 3.4, 1.3);
+    createWindow(1.2, 3.4, 1.3);
+
+
+    // Add building
+
+    scene.add(building);
+
+
+    // Floor
+
+    const floorGeometry =
+      new THREE.PlaneGeometry(
+        40,
+        40
+      );
+
+    const floorMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x151515,
+        roughness: 0.8
+      });
+
+    const floor =
+      new THREE.Mesh(
+        floorGeometry,
+        floorMaterial
+      );
+
+    floor.rotation.x =
+      -Math.PI / 2;
+
+    scene.add(floor);
+
+
+    // Animation
+
+    function animate() {
+
+      requestAnimationFrame(animate);
+
+      building.rotation.y += 0.002;
+
+      renderer.render(
+        scene,
+        camera
+      );
+    }
+
+    animate();
+
+
+    // Resize
+
+    window.addEventListener(
+      "resize",
+      () => {
+
+        camera.aspect =
+          window.innerWidth /
+          window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+          window.innerWidth,
+          window.innerHeight
+        );
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
